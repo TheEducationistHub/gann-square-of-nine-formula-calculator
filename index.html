@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free Gann Square of 9 Calculator for technical analysis trading. Calculate support and resistance levels for stocks, forex, and commodities using WD Gann's method.">
+    <meta name="keywords" content="gann square of nine, gann calculator, technical analysis, trading tool, support resistance, intraday trading, stock market">
+    <title>Gann Square of 9 Calculator | Technical Analysis Trading Tool</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: var(--secondary);
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .calculator-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .results-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .result-card {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .result-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .buy .result-title {
+            color: var(--success);
+        }
+        
+        .sell .result-title {
+            color: var(--danger);
+        }
+        
+        .levels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        
+        .level {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .level-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .level-label {
+            font-size: 0.85rem;
+            color: var(--secondary);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+        }
+        
+        .faq-question {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        
+        .faq-answer {
+            color: var(--secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .results-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .levels {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .loader-spinner {
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gann Square of 9 Calculator</h1>
+            <p class="subtitle">A powerful technical analysis tool based on W.D. Gann's theory for identifying potential support and resistance levels in financial markets</p>
+        </header>
+
+        <main>
+            <section class="calculator-card">
+                <div class="input-group">
+                    <label for="price">Current Market Price</label>
+                    <input type="number" id="price" placeholder="Enter current price (e.g., 150.50)" min="1" step="0.01">
+                </div>
+                
+                <button id="calculate-btn">Calculate Levels</button>
+                
+                <div class="loader" id="loader">
+                    <div class="loader-spinner"></div>
+                    <p>Calculating Gann levels...</p>
+                </div>
+                
+                <div class="results-container" id="results" style="display: none;">
+                    <div class="result-card buy">
+                        <div class="result-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                            </svg>
+                            BUY Recommendations
+                        </div>
+                        <div class="levels" id="buy-levels">
+                            <!-- Generated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="result-card sell">
+                        <div class="result-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path>
+                            </svg>
+                            SELL Recommendations
+                        </div>
+                        <div class="levels" id="sell-levels">
+                            <!-- Generated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="content-card">
+                <h2 class="section-title">About Gann Square of 9</h2>
+                <p>The Gann Square of Nine is a technical analysis tool developed by W.D. Gann, a famous financial trader. This mathematical instrument is based on the principle that price movements in financial markets are geometric and cyclical in nature.</p>
+                <p>The calculator derives potential support and resistance levels by calculating mathematical relationships between numbers in a spiral arrangement. These levels often correspond to key psychological points in the market and can help traders identify potential reversal areas.</p>
+                <p>While originally developed for stocks, the Gann Square of Nine can be applied to various markets including forex, commodities, and indices.</p>
+            </section>
+            
+            <section class="content-card">
+                <h2 class="section-title">How To Use This Calculator</h2>
+                <ol>
+                    <li><strong>Wait 1 hour after market opens</strong> to allow prices to stabilize</li>
+                    <li><strong>Enter the current market price</strong> of the security you're analyzing</li>
+                    <li><strong>Click "Calculate Levels"</strong> to generate support and resistance levels</li>
+                    <li><strong>Use the generated levels</strong> as potential entry points, exit targets, or stop-loss levels</li>
+                    <li><strong>For best results</strong>, combine Gann levels with other technical analysis indicators</li>
+                </ol>
+                <p>Note: The calculator is designed for intraday trading but can also be used for swing trading position management.</p>
+            </section>
+            
+            <section class="content-card">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                
+                <div class="faq-item">
+                    <p class="faq-question">What is the Gann Square of 9 theory?</p>
+                    <p class="faq-answer">The Gann Square of 9 is a mathematical technical analysis tool that calculates support and resistance levels based on the principle that markets move in geometric and cyclical patterns. It arranges numbers in a spiral formation where each complete 360° revolution represents a cycle in price movement :cite[4].</p>
+                </div>
+                
+                <div class="faq-item">
+                    <p class="faq-question">How accurate is the Gann Square of 9 calculator?</p>
+                    <p class="faq-answer">While many traders report uncanny accuracy with Gann levels, especially in intraday trading :cite[4], it should be used as one tool in a comprehensive trading strategy. No technical indicator is 100% accurate, so proper risk management is essential.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <p class="faq-question">Can I use this calculator for cryptocurrencies?</p>
+                    <p class="faq-answer">Yes, the Gann Square of 9 principles can be applied to any traded instrument including cryptocurrencies. However, due to the higher volatility in crypto markets, you may need to adjust your position sizing and risk management accordingly.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculate-btn');
+            const priceInput = document.getElementById('price');
+            const resultsDiv = document.getElementById('results');
+            const loader = document.getElementById('loader');
+            const buyLevelsDiv = document.getElementById('buy-levels');
+            const sellLevelsDiv = document.getElementById('sell-levels');
+            
+            calculateBtn.addEventListener('click', calculateGannLevels);
+            
+            priceInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    calculateGannLevels();
+                }
+            });
+            
+            function calculateGannLevels() {
+                const price = parseFloat(priceInput.value);
+                
+                if (!price || price <= 0) {
+                    alert('Please enter a valid price greater than 0');
+                    return;
+                }
+                
+                // Show loader
+                loader.style.display = 'block';
+                resultsDiv.style.display = 'none';
+                
+                // Simulate calculation time (real implementation would be faster)
+                setTimeout(() => {
+                    const { buyLevels, sellLevels } = generateGannLevels(price);
+                    
+                    displayLevels(buyLevels, buyLevelsDiv, 'Target');
+                    displayLevels(sellLevels, sellLevelsDiv, 'Target');
+                    
+                    loader.style.display = 'none';
+                    resultsDiv.style.display = 'grid';
+                    
+                    // Scroll to results
+                    resultsDiv.scrollIntoView({ behavior: 'smooth' });
+                }, 800);
+            }
+            
+            function generateGannLevels(price) {
+                // Calculate the square root of the price
+                const sqrt = Math.sqrt(price);
+                
+                // Calculate key Gann angles (0°, 45°, 90°, 135°, 180°, 225°, 270°, 315°, 360°)
+                const angles = [0, 45, 90, 135, 180, 225, 270, 315, 360];
+                
+                // Calculate levels for each angle
+                const levels = angles.map(angle => {
+                    // Gann's formula: Price = (sqrt(price) + angle/360)^2
+                    const level = Math.pow(sqrt + (angle / 360), 2);
+                    return parseFloat(level.toFixed(2));
+                });
+                
+                // Define buy (support) and sell (resistance) levels
+                const buyLevels = [
+                    { label: "Strong Support", value: levels[0] },
+                    { label: "Primary Support", value: levels[2] },
+                    { label: "Secondary Support", value: levels[4] },
+                    { label: "Tertiary Support", value: levels[6] }
+                ];
+                
+                const sellLevels = [
+                    { label: "Strong Resistance", value: levels[1] },
+                    { label: "Primary Resistance", value: levels[3] },
+                    { label: "Secondary Resistance", value: levels[5] },
+                    { label: "Tertiary Resistance", value: levels[7] }
+                ];
+                
+                return { buyLevels, sellLevels };
+            }
+            
+            function displayLevels(levels, container, prefix) {
+                container.innerHTML = '';
+                
+                levels.forEach(level => {
+                    const levelEl = document.createElement('div');
+                    levelEl.className = 'level';
+                    levelEl.innerHTML = `
+                        <div class="level-label">${level.label}</div>
+                        <div class="level-value">${level.value}</div>
+                    `;
+                    container.appendChild(levelEl);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
